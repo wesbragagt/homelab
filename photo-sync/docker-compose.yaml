@@ -1,0 +1,19 @@
+# docker-compose run backup
+version: '3.3'
+services:
+  backup:
+    image: icloudpd/icloudpd:latest
+    tty: true
+    stdin_open: true
+    container_name: icloudpd_backup
+    restart: 'always'
+    volumes:
+      # test locally
+      # - ./photos:/data
+      # Actual nas location
+      - /volume1/homes/wesbragagt/Photos:/data
+      - ./.icloudpd-cookies:/tmp/.icloudpd-cookies
+    env_file:
+      - .env
+    command: |
+      icloudpd --directory /data --username ${ICLOUD_USER} --password ${ICLOUD_PASS} --folder-structure {:%Y/%m} --auto-delete --cookie-directory "/tmp/.cookies"
